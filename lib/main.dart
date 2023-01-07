@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:technical_problem_client/models/category_model.dart';
+import 'package:technical_problem_client/Utils/app_color.dart';
+import 'package:technical_problem_client/screens/login/login_view.dart';
+
+import 'Utils/constants.dart';
+import 'models/category_model.dart';
 
 void main() => runApp(const MyApp());
 
@@ -9,9 +13,23 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Material App',
-      home: HomeView(),
-    );
+        title: 'Material App',
+        home: const Scaffold(body: LoginView()),
+        theme: ThemeData(
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(AppColor.brandColor),
+              ),
+            ),
+            textTheme: const TextTheme(
+              headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
+              headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+              bodyText2: TextStyle(
+                  fontSize: 14.0,
+                  fontFamily: 'Hind',
+                  color: AppColor.brandColor),
+            )));
   }
 }
 
