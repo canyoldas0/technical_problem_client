@@ -4,6 +4,17 @@ import 'dart:convert';
 class NetworkManager {
   final String baseUrl = "http://localhost:3000/";
 
+  // Temporary headers.
+  Options options = Options(headers: {
+    'Content-type': 'application/json',
+    'Accept': 'application/json',
+    'client-secret': 'xyz',
+    'client-id': 'xyz',
+    'package-name': 'com.abc.abc',
+    'platform': 'android',
+    'Authorization': "eyJ0eXAiOiJKV1QiLCJhdhsdhjd"
+  });
+
   // not gonna be void.
   // TODO: Make generic network call.
   void makeCall(Encodable request) {
