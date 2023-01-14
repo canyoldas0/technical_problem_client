@@ -3,6 +3,12 @@ import 'dart:convert';
 
 class NetworkManager {
   final String baseUrl = "http://localhost:3000/";
+
+  // not gonna be void.
+  // TODO: Make generic network call.
+  void makeCall(Encodable request) {
+    Map<String, dynamic> body = request.toJson();
+  }
 }
 
 abstract class Encodable {
