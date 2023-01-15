@@ -11,7 +11,7 @@ final Map<String, String> header = {
   'client-id': 'abc',
   'package-name': 'com.sasa.abc',
   'platform': 'android',
-  'Authorization': "access_token"
+  'Authorization': "access_token",
 };
 
 enum RequestType { GET, POST, PUT, PATCH, DELETE }
@@ -43,6 +43,7 @@ class NetworkManager {
       Logging(dio),
     });
 
+    dio.options.headers.addAll({'date': '${DateTime.now()}'});
     return dio;
   }
 
