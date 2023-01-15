@@ -1,5 +1,8 @@
 import 'package:dio/dio.dart';
-import 'dart:convert';
+
+import 'auth_interceptor.dart';
+
+enum RequestType { GET, POST, PUT, PATCH, DELETE }
 
 class NetworkManager {
   final String baseUrl = "http://localhost:3000/";
@@ -15,8 +18,34 @@ class NetworkManager {
     'Authorization': "eyJ0eXAiOiJKV1QiLCJhdhsdhjd"
   });
 
+  final dio = createDio();
+
+  NetworkManager._internal();
+
+  static final _singleton = NetworkManager._internal();
+
+  factory NetworkManager() => _singleton;
+
+  static Dio createDio() {
+    var dio = Dio(BaseOptions(
+      baseUrl: "http://localhost:3000/",
+      receiveTimeout: 20000,
+      connectTimeout: 20000,
+      sendTimeout: 20000,
+    ));
+
+    dio.interceptors.addAll({
+      AuthInterceptor(dio),
+    });
+
+    dio.interceptors.addAll({
+      Logging(dio),
+    });
+
+    return dio;
+  }
+
   // not gonna be void.
-  // TODO: Make generic network call.
   void makeCall(Encodable request) {
     Map<String, dynamic> body = request.toJson();
   }
