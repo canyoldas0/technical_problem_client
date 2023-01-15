@@ -1,22 +1,23 @@
 import 'package:dio/dio.dart';
 
-import 'auth_interceptor.dart';
+import 'base_models/network_response.dart';
+import 'interceptors/auth_interceptor.dart';
+import 'interceptors/logging.dart';
+
+final Map<String, String> header = {
+  'Content-type': 'application/json',
+  'Accept': 'application/json',
+  'client-secret': 'xyz',
+  'client-id': 'abc',
+  'package-name': 'com.sasa.abc',
+  'platform': 'android',
+  'Authorization': "access_token"
+};
 
 enum RequestType { GET, POST, PUT, PATCH, DELETE }
 
 class NetworkManager {
   final String baseUrl = "http://localhost:3000/";
-
-  // Temporary headers.
-  Options options = Options(headers: {
-    'Content-type': 'application/json',
-    'Accept': 'application/json',
-    'client-secret': 'xyz',
-    'client-id': 'xyz',
-    'package-name': 'com.abc.abc',
-    'platform': 'android',
-    'Authorization': "eyJ0eXAiOiJKV1QiLCJhdhsdhjd"
-  });
 
   final dio = createDio();
 
@@ -45,9 +46,45 @@ class NetworkManager {
     return dio;
   }
 
-  // not gonna be void.
-  void makeCall(Encodable request) {
-    Map<String, dynamic> body = request.toJson();
+  Future<NetworkResponse?> apiCall(
+      String url,
+      Map<String, dynamic>? queryParameters,
+      Map<String, dynamic>? body,
+      RequestType requestType) async {
+    late Response result;
+    try {
+      switch (requestType) {
+        case RequestType.GET:
+          {
+            Options options = Options(headers: header);
+            result = await dio.get(url,
+                queryParameters: queryParameters, options: options);
+            break;
+          }
+        case RequestType.POST:
+          {
+            Options options = Options(headers: header);
+            result = await dio.post(url, data: body, options: options);
+            break;
+          }
+        case RequestType.DELETE:
+          {
+            Options options = Options(headers: header);
+            result =
+                await dio.delete(url, data: queryParameters, options: options);
+            break;
+          }
+      }
+      if (result != null) {
+        return NetworkResponse.success(result.data);
+      } else {
+        return const NetworkResponse.error("Data is null");
+      }
+    } on DioError catch (error) {
+      return NetworkResponse.error(error.message);
+    } catch (error) {
+      return NetworkResponse.error(error.toString());
+    }
   }
 }
 
