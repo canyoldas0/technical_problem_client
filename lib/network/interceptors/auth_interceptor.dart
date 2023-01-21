@@ -1,5 +1,8 @@
 import 'package:dio/dio.dart';
 
+import '../../screens/login/user_service.dart';
+import '../token_repository.dart';
+
 class AuthInterceptor extends Interceptor {
   final Dio dio;
 
@@ -18,8 +21,8 @@ class AuthInterceptor extends Interceptor {
 
         // Call the refresh endpoint to get a new token
         await UserService().refresh().then((response) async {
-          await TokenRepository().persistAccessToken(response.accessToken);
-          accessToken = response.accessToken;
+          await TokenRepository().persistAccessToken(response?.accessToken);
+          accessToken = response?.accessToken;
         }).catchError((error, stackTrace) {
           handler.reject(error, true);
         }).whenComplete(() => dio.interceptors.requestLock.unlock());
